@@ -1,4 +1,4 @@
-docker-images
-=============
+JBoss EAP docker image
+=======================
 
-Docker images for xPaaS services
+JBoss EAP docker image for xPaaS services

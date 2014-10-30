@@ -1,4 +1,4 @@
-docker-images
-=============
+BPM suite docker image
+=======================
 
-Docker images for xPaaS services
+BPM suite docker image for xPaaS services

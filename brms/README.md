@@ -1,4 +1,4 @@
-docker-images
-=============
+BRMS docker image
+=================
 
-Docker images for xPaaS services
+BRMS docker image for xPaaS services
