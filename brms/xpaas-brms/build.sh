@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_NAME="redhat/xpaas-brms"
-IMAGE_TAG="1.0"
+IMAGE_TAG="6.0"
 
 # Build the container image.
 echo "Building the Docker container for $IMAGE_NAME:$IMAGE_TAG.."
