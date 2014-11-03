@@ -30,10 +30,13 @@ ENV BPMS_QUARTZ_PROPERTIES /opt/jboss/bpms/quartz-db.properties
 ENV BPMS_CLUSTER_PASSWORD bpmsclustering
 ENV BPMS_CLUSTER_NODE 1
 
+####### CUSTOM JBOSS USER ############
+# Switchback to jboss user
+USER jboss
 
 ####### BPMS CUSTOM CONFIGURATION ############
 RUN mkdir -p /opt/jboss/bpms/index /opt/jboss/bpms/vfs
-ADD etc/start-bpms.sh /opt/jboss/bpms
+ADD etc/start-bpms.sh /opt/jboss/bpms/start-bpms.sh
 ADD etc/standalone-full-ha.xml /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml
 ADD etc/bpms-users.properties /opt/jboss/eap/standalone/configuration/bpms-users.properties
 ADD etc/bpms-roles.properties /opt/jboss/eap/standalone/configuration/bpms-roles.properties

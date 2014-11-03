@@ -493,7 +493,7 @@
             <!-- XPAAS BPMSUITE - CUSTOM LOGIN MODULE --> 
             <login-module code="UsersRoles" flag="required">
               <module-option name="usersProperties" value="${jboss.server.config.dir}/bpms-users.properties"/>
-              <module-option name="rolesProperties" value="${jboss.server.config.dir}/bpms-roles.properties""/>
+              <module-option name="rolesProperties" value="${jboss.server.config.dir}/bpms-roles.properties"/>
             </login-module>
           </authentication>
         </security-domain>

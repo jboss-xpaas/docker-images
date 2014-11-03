@@ -4,7 +4,7 @@ XPaaS JBoss BPM Suite Docker image
 This project builds a [docker](http://docker.io/) container for running JBoss BPM Suite.
 
 This image provides a container including:     
-* Openjdk 1.7.0
+* OpenJDK 1.7.0
 * JBoss EAP 6.1.3
 * JBoss BPMS 6.1.0.DR4-redhat3
 
