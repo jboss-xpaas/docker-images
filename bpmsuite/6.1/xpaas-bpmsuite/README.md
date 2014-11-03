@@ -4,7 +4,7 @@ XPaaS JBoss BPM Suite Docker image
 This project builds a [docker](http://docker.io/) container for running JBoss BPM Suite.
 
 This image provides a container including:     
-* JBoss BPMS 6.1.0.DR4
+* JBoss BPMS 6.1.0.DR4-redhat3
 
 Table of contents
 ------------------
@@ -55,11 +55,13 @@ Or you can try it out via docker command directly:
 
     docker run -P -d [--name <container_name>] redhat/xpaas-bpmsuite:6.1
 
-These commands will start JBoss BPMS web application.
+These commands will start JBoss BPM Suite web application.
 
-**Environment variables**
+**Environment variables**         
 
-For running BPMS, you need to specify some database connection JBoss Wildfly/EAP run arguments:
+You can set additional environment variables when running the container for configuring JBoss BPM Suite:       
+
+For running BPMS using an external database, you need to specify some database connection arguments:       
 
 - <code>BPMS_CONNECTION_URL</code> - The database connection URL. If not set, defaults to <code>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</code>          
 - <code>BPMS_CONNECTION_DRIVER</code> - The database connection driver. See [Notes] for available database connection drivers. If not set, defaults to <code>h2</code>        
