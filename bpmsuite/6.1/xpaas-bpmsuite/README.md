@@ -168,7 +168,7 @@ You can attach the container by running:
 
     docker attach <container_id>
 
-The BPMS web application logs can be found inside the cointaer at path:
+The BPMS web application logs can be found inside the container at path:
 
     /opt/jboss/eap/standalone/log/server.log
 
