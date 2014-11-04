@@ -5,7 +5,7 @@ This project builds a [docker](http://docker.io/) container for running JBoss BP
 
 This image provides a container including:     
 * OpenJDK 1.7.0
-* JBoss EAP 6.1.3
+* JBoss EAP 6.3.1
 * JBoss BPMS 6.1.0.DR4-redhat3
 
 Table of contents
