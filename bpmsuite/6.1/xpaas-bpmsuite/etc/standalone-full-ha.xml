@@ -38,7 +38,8 @@
     <extension module="org.jboss.as.weld"/>
   </extensions>
   <system-properties>
-    <property name="org.kie.example" value="${org.kie.example:true}"/>
+    <!-- XPAAS BPMSUITE - DISABLED EXAMPLE -->
+    <property name="org.kie.example" value="${org.kie.example:false}"/>
     <property name="org.jbpm.designer.perspective" value="${org.jbpm.designer.perspective:full}"/>
     <property name="designerdataobjects" value="${designerdataobjects:false}"/>
 
