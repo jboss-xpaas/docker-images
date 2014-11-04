@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# *******************************
+# BRMS docker image build script
+# *******************************
+
 IMAGE_NAME="redhat/xpaas-brms"
 IMAGE_TAG="6.1"
 
