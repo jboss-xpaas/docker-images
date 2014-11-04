@@ -44,12 +44,12 @@
     <property name="designerdataobjects" value="${designerdataobjects:false}"/>
 
     <!-- XPAAS BPMSUITE - CUSTOM PROPERTIES FOR CLUSTERING -->
-    <property name="org.uberfire.nio.git.daemon.host" value="${jboss.bpms.git.host}"/>
-    <property name="org.uberfire.nio.git.daemon.port" value="${jboss.bpms.git.port}"/>
-    <property name="org.uberfire.nio.git.dir" value="${jboss.bpms.git.dir}"/>
-    <property name="org.uberfire.nio.git.ssh.host" value="${jboss.bpms.ssh.host}"/>
-    <property name="org.uberfire.nio.git.ssh.port" value="${jboss.bpms.ssh.port}"/>
-    <property name="org.uberfire.metadata.index.dir" value="${jboss.bpms.index.dir}"/>
+    <property name="org.uberfire.nio.git.daemon.host" value="${jboss.bpms.git.host:127.0.0.1}"/>
+    <property name="org.uberfire.nio.git.daemon.port" value="${jboss.bpms.git.port:9520}"/>
+    <property name="org.uberfire.nio.git.dir" value="${jboss.bpms.git.dir:/opt/jboss/bpms/vfs}"/>
+    <property name="org.uberfire.nio.git.ssh.host" value="${jboss.bpms.ssh.host:127.0.0.1}"/>
+    <property name="org.uberfire.nio.git.ssh.port" value="${jboss.bpms.ssh.port:9521}"/>
+    <property name="org.uberfire.metadata.index.dir" value="${jboss.bpms.index.dir:/opt/jboss/bpms/index}"/>
     <property name="org.uberfire.nio.git.ssh.enabled" value="true"/>
     <property name="org.uberfire.nio.git.daemon.upload" value="true"/>
     <!-- <property name="org.uberfire.nio.git.ssh.cert.dir" value=""/> -->
@@ -485,13 +485,13 @@
       <security-domains>
         <security-domain name="other" cache-type="default">
           <authentication>
-            <login-module code="Remoting" flag="optional">
+            <!-- XPAAS BPMSUITE - CUSTOM LOGIN MODULE -->
+            <!-- <login-module code="Remoting" flag="optional">
               <module-option name="password-stacking" value="useFirstPass"/>
             </login-module>
             <login-module code="RealmDirect" flag="required">
               <module-option name="password-stacking" value="useFirstPass"/>
-            </login-module>
-            <!-- XPAAS BPMSUITE - CUSTOM LOGIN MODULE --> 
+            </login-module> -->
             <login-module code="UsersRoles" flag="required">
               <module-option name="usersProperties" value="${jboss.server.config.dir}/bpms-users.properties"/>
               <module-option name="rolesProperties" value="${jboss.server.config.dir}/bpms-roles.properties"/>
