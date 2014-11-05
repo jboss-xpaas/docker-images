@@ -35,22 +35,28 @@ ENV BPMS_CLUSTER_NODE 1
 USER jboss
 
 ####### BPMS CUSTOM CONFIGURATION ############
+# Create the BPMS directories inside /opt/jboss
 RUN mkdir -p /opt/jboss/bpms/index /opt/jboss/bpms/vfs
 
 # There is an issue in Docker with ADD command.
 # When a file is added into the container's filesystem, the file owner is always root, instead of the current running user.
 # See https://github.com/docker/docker/issues/5110
-# The workaround is adding the files using curl
-# ADD etc/start-bpms.sh /opt/jboss/bpms/start-bpms.sh
-# ADD etc/standalone-full-ha.xml /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml
-# ADD etc/bpms-users.properties /opt/jboss/eap/standalone/configuration/bpms-users.properties
-# ADD etc/bpms-roles.properties /opt/jboss/eap/standalone/configuration/bpms-roles.properties
-RUN curl --silent --output /opt/jboss/bpms/start-bpms.sh https://raw.githubusercontent.com/jboss-xpaas/docker-images/master/bpmsuite/6.1/xpaas-bpmsuite/etc/start-bpms.sh; \ 
-curl --silent --output /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml https://raw.githubusercontent.com/jboss-xpaas/docker-images/master/bpmsuite/6.1/xpaas-bpmsuite/etc/standalone-full-ha.xml; \ 
-curl --silent --output /opt/jboss/eap/standalone/configuration/bpms-users.properties https://raw.githubusercontent.com/jboss-xpaas/docker-images/master/bpmsuite/6.1/xpaas-bpmsuite/etc/bpms-users.properties; \ 
-curl --silent --output /opt/jboss/eap/standalone/configuration/bpms-roles.properties https://raw.githubusercontent.com/jboss-xpaas/docker-images/master/bpmsuite/6.1/xpaas-bpmsuite/etc/bpms-roles.properties
+# The workaround is doing a chown using root user and then switchback to jboss user.
+ADD etc/start-bpms.sh /opt/jboss/bpms/start-bpms.sh
+ADD etc/standalone-full-ha.xml /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml
+ADD etc/bpms-users.properties /opt/jboss/eap/standalone/configuration/bpms-users.properties
+ADD etc/bpms-roles.properties /opt/jboss/eap/standalone/configuration/bpms-roles.properties
+USER root
+RUN chown jboss:jboss /opt/jboss/bpms/start-bpms.sh; \ 
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml; \ 
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/bpms-users.properties; \ 
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/bpms-roles.properties
+
 # Add the executable flag.
 RUN chmod +x /opt/jboss/bpms/start-bpms.sh
+
+# Switchback to jboss user
+USER jboss
 
 ####### RUNNING BPMS ############
 CMD ["/opt/jboss/bpms/start-bpms.sh"]
