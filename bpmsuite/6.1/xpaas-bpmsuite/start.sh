@@ -4,8 +4,6 @@
 # BPMS docker image start script
 # *******************************
 
-#!/bin/sh
-
 # Program arguments
 #
 # -c | --container-name:    The name for the created container.
