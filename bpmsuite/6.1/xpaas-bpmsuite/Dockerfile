@@ -1,3 +1,11 @@
+############################################################
+# Dockerfile to build xpaas-bpmsuite image including:
+# - OpenJDK 1.7.0
+# - JBoss EAP 6.3.1
+# - JBoss BPMS 6.1.0.DR4-redhat3
+# Version: 6.1
+############################################################
+
 ####### BASE ############
 FROM docker-registry.usersys.redhat.com/goldmann/jboss-bpms:6.1
 
