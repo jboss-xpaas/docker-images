@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_NAME="redhat/xpaas-uberfire-custer-controller"
-IMAGE_TAG="6.0"
+IMAGE_TAG="6.1"
 
 # Build the container image.
 echo "Building the Docker container for $IMAGE_NAME:$IMAGE_TAG.."
