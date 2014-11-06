@@ -36,19 +36,34 @@ ENV HELIX_VERSION 0.6.3
 ENV HELIX_HOME /opt/helix
 
 ####### HELIX ############
-RUN curl --silent --output helix.tar http://ftp.cixug.es/apache/helix/$HELIX_VERSION/binaries/helix-core-$HELIX_VERSION-pkg.tar; \ 
-tar -xvf helix.tar; \ 
-mv helix-core-$HELIX_VERSION helix; \ 
-mv helix/ /opt/; \  
-rm helix.tar 
+# RUN curl --silent --output helix.tar http://ftp.cixug.es/apache/helix/$HELIX_VERSION/binaries/helix-core-$HELIX_VERSION-pkg.tar; \
+# tar -xvf helix.tar; \
+# mv helix-core-$HELIX_VERSION helix; \
+# mv helix/ /opt/; \
+# rm helix.tar
+
+####### CUSTOM JBOSS USER ############
+# Switchback to jboss user
+USER jboss
 
 ####### SCRIPTS ############
 WORKDIR /
-RUN mkdir -p /jboss/scripts/brms /opt/jboss/brms/vfs /opt/jboss/brms/index
+RUN mkdir -p /opt/jboss/scripts/brms /opt/jboss/brms/vfs /opt/jboss/brms/index
 ADD etc/start-brms.sh /opt/jboss/brms/start-brms.sh
 ADD etc/standalone-full-ha.xml /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml
 ADD etc/brms-users.properties /opt/jboss/eap/standalone/configuration/brms-users.properties
 ADD etc/brms-roles.properties /opt/jboss/eap/standalone/configuration/brms-roles.properties
+
+USER root
+RUN chown jboss:jboss /opt/jboss/brms/start-brms.sh; \
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml; \
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/brms-users.properties; \
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/brms-roles.properties
+
+# Add the executable flag.
+RUN chmod +x /opt/jboss/brms/start-brms.sh
+# Switchback to jboss user
+USER jboss
 
 ####### RUNNING BRMS ############
 CMD ["/opt/jboss/brms/start-brms.sh"]
