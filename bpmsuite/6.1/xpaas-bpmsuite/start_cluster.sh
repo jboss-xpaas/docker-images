@@ -155,7 +155,7 @@ function chck_docker_image {
     echo "Checking $NAME image existance...."
     EXIST_IMAGE=$(docker images -q $IMAGE)
     if [ "$EXIST_IMAGE" == "" ]; then
-        echo "$NAME image does not exist. Please pull or build it before running the cluster. Exiting!"
+        echo "The image '$NAME' does not exist. Please pull or build it before running the cluster. Exiting!"
         exit 1
     fi
     echo "$NAME image exists!"
