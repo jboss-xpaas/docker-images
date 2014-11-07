@@ -188,6 +188,10 @@ Currently the following DBM systems are supported, depending on the value of <co
     </tr>
 </table>
 
+You can use the <code>start.sh</code> shell script to run a container with an external database support:      
+
+    start.sh -c xpaas_bpmsuite -d "mysql" -url "jdbc:mysql://<mysql_container_ip>:<mysql_port>/<database>" -user <db_username> -password <db_password>
+
 Clustering
 ----------
 

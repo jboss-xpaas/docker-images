@@ -80,7 +80,7 @@ function run_haproxy() {
         exit 1
     fi
     echo "HAProxy - Container started at $HAPROXY_CONTAINER_IP:5000"
-    echo "HAProxy - You can navigate into BPM Suite at URL 'http://$HAPROXY_CONTAINER_IP:5000/kie-wb"
+    echo "HAProxy - You can navigate into BPM Suite at URL 'http://$HAPROXY_CONTAINER_IP:5000/business-central"
 
     echo ""
     echo ""
@@ -98,7 +98,7 @@ function run_zk_helix() {
     # Create the BPMS container.
     CONTAINER_NAME="bpms-zookeeper"
     ROOT_PASSWORD="xpaas"
-    image_xpaas_zookeeper=$(docker run -P -d --name $CONTAINER_NAME -e ROOT_PASSWORD="$ROOT_PASSWORD" -e CLUSTER_NAME="$CLUSTER_NAME" -e VFS_REPO="$VFS_LOCK" $ZK_IMAGE_NAME:$ZK_IMAGE_VERSION)
+    image_xpaas_zookeeper=$(docker run -P -d --name $CONTAINER_NAME -e CLUSTER_NAME="$CLUSTER_NAME" -e VFS_REPO="$VFS_LOCK" $ZK_IMAGE_NAME:$ZK_IMAGE_VERSION)
     ZK_HOST=$(docker inspect $image_xpaas_zookeeper | grep IPAddress | awk '{print $2}' | tr -d '",')
     if [ "$ZK_HOST" == "" ]; then
         echo "Zookeeper container seems not to be started successfully. Please review the container logs. Exiting!"
@@ -130,10 +130,10 @@ function init() {
     fi
     
     # Check images exist on local docker registry.
-    chck_docker_image $ZK_IMAGE_NAME $ZK_IMAGE_VERSION "Zookeeper"
+    chck_docker_image $ZK_IMAGE_NAME $ZK_IMAGE_VERSION "XPaaS UberFire cluster controller"
     chck_docker_image $MYSQ_IMAGE_NAME $MYSQ_IMAGE_VERSION "MySQL"
-    chck_docker_image $BPMS_IMAGE_NAME $BPMS_IMAGE_VERSION "BPM Suite"
-    chck_docker_image $HAPROXY_IMAGE_NAME $HAPROXY_IMAGE_VERSION "HAProxy"
+    chck_docker_image $BPMS_IMAGE_NAME $BPMS_IMAGE_VERSION "XPaaS JBoss BPM Suite"
+    # chck_docker_image $HAPROXY_IMAGE_NAME $HAPROXY_IMAGE_VERSION "HAProxy"
 
     echo ""
     echo ""
@@ -264,7 +264,7 @@ function run_bpms() {
     wait_for_bpms "$BPMS_CONTAINER_IP"
     
     echo "BPMS - JBoss BPMS container started (server instance #$BPMS_NODE_INSTANCE) at $BPMS_CONTAINER_IP"
-    echo "BPMS - You can navigate at URL 'http://$BPMS_CONTAINER_IP:8080/kie-wb'"
+    echo "BPMS - You can navigate at URL 'http://$BPMS_CONTAINER_IP:8080/business-central'"
     
     echo ""
     echo ""
@@ -277,7 +277,7 @@ function run_bpms() {
 function wait_for_bpms() {
     NODE_IP=$1
     KEYWORD=login
-    #URL_TO_CHECK="http://$NODE_IP:8080/kie-wb/org.kie.workbench.KIEWebapp/KIEWebapp.html?"
+    #URL_TO_CHECK="http://$NODE_IP:8080/business-central/org.kie.workbench.KIEWebapp/KIEWebapp.html?"
     # Wait for dashbuilder application to be up, as it's the last one to deploy.
     URL_TO_CHECK="http://$NODE_IP:8080/dashbuilder/"
     

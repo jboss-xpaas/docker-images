@@ -27,6 +27,13 @@ DIALECT=org.hibernate.dialect.H2Dialect
 if [ -f $PERSISTENCE_PATH ]; then
     rm -f $PERSISTENCE_PATH
 fi
+# Check H2 database.
+if [[ $BPMS_CONNECTION_DRIVER == *h2* ]]; 
+then
+    echo "Using H2 dialect for BPMS webapp"
+    DIALECT=org.hibernate.dialect.H2Dialect
+fi
+
 # Check MySQL database.
 if [[ $BPMS_CONNECTION_DRIVER == *mysql* ]]; 
 then
@@ -42,6 +49,7 @@ sed -e "s;$DEFAULT_DIALECT;$DIALECT;" $PERSISTENCE_TEMPLATE_PATH > $PERSISTENCE_
 JBOSS_CLUSTER_PROPERTIES_START="<!--"
 JBOSS_CLUSTER_PROPERTIES_END="-->"
 if [[ ! -z "$BPMS_CLUSTER_NAME" ]] ; then
+    echo "Enabling cluster support for BPMS webapp"
     JBOSS_CLUSTER_PROPERTIES_START=""
     JBOSS_CLUSTER_PROPERTIES_END=""
 fi
