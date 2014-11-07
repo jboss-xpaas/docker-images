@@ -1,11 +1,11 @@
-XPaaS JBoss UberFire cluster controller image
-=============================================
+XPaaS JBoss UberFire cluster controller Docker image
+====================================================
 
 This project builds a [docker](http://docker.io/) container for running the cluster controller for UberFire based web applications.      
 
 This image provides a container including:     
-* Zookeeper IO v3.4.6        
-* Helix v0.6.3       
+* Apache Zookeeper IO v3.4.6        
+* Apache Helix v0.6.3       
 
 This image is used as a cluster controller for both BPMS/BRMS v6.1       
 

@@ -253,6 +253,7 @@ After running it, you can see the created containers by typing:
     docker ps -a
 
 **Notes**
+* The HA Proxy load balancer is not provided in the clustered environment by this script, as the idea is that HA Proxy will be provided by OpenShift v3 itself.                 
 * Pending JBoss EAP jgroups clustering support.         
 
 Logging
@@ -296,3 +297,4 @@ In order to run all container services provided by this image, you have to run t
 Notes
 -----
 * This container forces to start JBoss EAP using <code>full-ha</code> profile.                         
+* This container applies dynamic configuration to <code>standalone-full-ha.xml</code> (from JBoss EAP) and <code>persistence.xml</code> (from BPMS webapp) files depending on the database to use and if the environment is a clustered one.                         

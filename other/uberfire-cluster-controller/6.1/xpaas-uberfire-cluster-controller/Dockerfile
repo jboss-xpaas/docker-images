@@ -1,7 +1,7 @@
 ############################################################
 # Dockerfile to build xpaas-uberfire-cluster-controller image including:
-# - Zookeeper IO v3.4.6
-# - Helix v0.6.3
+# - Apache Zookeeper IO v3.4.6
+# - Apache Helix v0.6.3
 # This image is used as a cluster controller for both BPMS/BRMS v6.1
 # Version: 6.1
 ############################################################

@@ -4,6 +4,7 @@
   ***************************************
   - THIS FILE IS COPIED FROM DIRECTORY "jboss-eap-6.3/standalone/configuration/standalone-full-ha.xml" INSIDE "jboss-bpms-6.1.0.redhat-3-deployable-eap6.x.zip"
   - THE CUSTOM MODIFICATIONS ON THIS FILE IN THIS IMAGE ARE MARKED WITH THE COMMENT'S TEXT "XPAAS BPMSUITE"
+  - THIS TEMPLATE IS USED TO REPLACE SOME PARAMETERS ON CONTAINER RUNTIME AND USED AS THE FINAL CONFIGURATION FILE FOR EAP RUNNING IN full-ha PROFILE 
 -->
 <server xmlns="urn:jboss:domain:1.6">
   <extensions>

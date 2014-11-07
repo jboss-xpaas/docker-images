@@ -13,6 +13,7 @@
   ***************************************
   - THIS FILE IS COPIED FROM DIRECTORY "jboss-eap-6.3/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml" INSIDE "jboss-bpms-6.1.0.redhat-3-deployable-eap6.x.zip"
   - THE CUSTOM MODIFICATIONS ON THIS FILE IN THIS IMAGE ARE MARKED WITH THE COMMENT'S TEXT "XPAAS BPMSUITE"
+  - THIS TEMPLATE IS USED TO REPLACE THE HIBERNATE DIALECT ON CONTAINER RUNTIME AND USED AS THE FINAL PERSISTENCE DESCRIPTOR FILE FOR THE BPMS WEBAPP
 -->
 
 <persistence version="2.0"
