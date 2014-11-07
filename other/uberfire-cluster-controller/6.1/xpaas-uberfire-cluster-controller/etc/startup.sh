@@ -1,5 +1,6 @@
 #!/bin/sh
 
+DOCKER_IP=$(ip addr show eth0 | grep -E '^\s*inet' | grep -m1 global | awk '{ print $2 }' | sed 's|/.*||')
 ZK_CONFIG_FILE=$ZOOKEEPER_HOME/conf/zoo.cfg
 HELIX_LOGS_FILE=/tmp/controller.log
 
@@ -53,14 +54,14 @@ echo "ZK - Starting server..."
 $ZOOKEEPER_HOME/bin/zkServer.sh start
 echo "ZK - Server started"
 
-echo "Helix - Adding cluster '$CLUSTER_NAME' into server 'localhost:2181'"
-$HELIX_HOME/bin/helix-admin.sh --zkSvr localhost:2181 --addCluster $CLUSTER_NAME
+echo "Helix - Adding cluster '$CLUSTER_NAME' into server '$DOCKER_IP:$ZOOKEEPER_CLIENT_PORT'"
+$HELIX_HOME/bin/helix-admin.sh --zkSvr localhost:$ZOOKEEPER_CLIENT_PORT --addCluster $CLUSTER_NAME
 
-echo "Helix - Added resource '$VFS_REPO' for cluster '$CLUSTER_NAME' into server 'localhost:2181'" 
-/opt/helix/bin/helix-admin.sh --zkSvr localhost:2181 --addResource $CLUSTER_NAME $VFS_REPO 1 LeaderStandby AUTO_REBALANCE
+echo "Helix - Added resource '$VFS_REPO' for cluster '$CLUSTER_NAME' into server '$DOCKER_IP:$ZOOKEEPER_CLIENT_PORT'" 
+$HELIX_HOME/bin/helix-admin.sh --zkSvr localhost:$ZOOKEEPER_CLIENT_PORT --addResource $CLUSTER_NAME $VFS_REPO 1 LeaderStandby AUTO_REBALANCE
 
 echo "Helix - Starting helix controller. You can find the logs at '$HELIX_LOGS_FILE'"
-$HELIX_HOME/bin/run-helix-controller.sh --zkSvr localhost:2181 --cluster $CLUSTER_NAME 2>&1 >> $HELIX_LOGS_FILE
+$HELIX_HOME/bin/run-helix-controller.sh --zkSvr localhost:$ZOOKEEPER_CLIENT_PORT --cluster $CLUSTER_NAME 2>&1 >> $HELIX_LOGS_FILE
 
 echo "XPaaS Uberfire cluster controller finished"  
 
