@@ -17,6 +17,8 @@ Table of contents
 * **[Using JBoss BPMS](#using-jboss-bpms)**
 * **[BPMS Users and roles](#bpms-users-and-roles)**
 * **[Accessing the container](#accessing-the-container)**
+* **[External database support](#external-database-support)**
+* **[Clustering](#clustering)**
 * **[Logging](#logging)**
 * **[Stopping the container](#stopping-the-container)**
 * **[Experimenting](#experimenting)**
@@ -67,7 +69,7 @@ You can set additional environment variables when running the container for conf
 For running BPMS using an external database, you need to specify some database connection arguments:       
 
 - <code>BPMS_CONNECTION_URL</code> - The database connection URL. If not set, defaults to <code>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</code>          
-- <code>BPMS_CONNECTION_DRIVER</code> - The database connection driver. See [Notes] for available database connection drivers. If not set, defaults to <code>h2</code>        
+- <code>BPMS_CONNECTION_DRIVER</code> - The database connection driver. See **[External database support](#external-database-support)** for available database connection drivers. If not set, defaults to <code>h2</code>        
 - <code>BPMS_CONNECTION_USER</code> - The database connection username. If not set, defaults to <code>sa</code>
 - <code>BPMS_CONNECTION_PASSWORD</code> - The database connection password. If not set, defaults to <code>sa</code>       
 
@@ -157,6 +159,95 @@ To access a given <code>container_id</code> type:
 
     sudo nsenter -t $(docker inspect --format '{{ .State.Pid }}' <container_id> ) -m -u -i -n -p -w
 
+External database support
+-------------------------
+
+By default, this container runs using a H2 embedded database.       
+
+For running BPMS using an external database, you need to specify some database connection environment variables:       
+
+- <code>BPMS_CONNECTION_URL</code> - The database connection URL. If not set, defaults to <code>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</code>          
+- <code>BPMS_CONNECTION_DRIVER</code> - The database connection driver. See [Notes] for available database connection drivers. If not set, defaults to <code>h2</code>        
+- <code>BPMS_CONNECTION_USER</code> - The database connection username. If not set, defaults to <code>sa</code>
+- <code>BPMS_CONNECTION_PASSWORD</code> - The database connection password. If not set, defaults to <code>sa</code>       
+
+Currently the following DBM systems are supported, depending on the value of <code>BPMS_CONNECTION_DRIVER</code> environment variable:       
+
+<table>
+    <tr>
+        <td><b>BPMS_CONNECTION_DRIVER</b></td>
+        <td><b>DBMS</b></td>
+    </tr>
+    <tr>
+        <td>h2</td>
+        <td>H2</td>
+    </tr>
+    <tr>
+        <td>mysql</td>
+        <td>MySQL 5.1.X</td>
+    </tr>
+</table>
+
+Clustering
+----------
+
+**BPMS clustered environment**
+
+JBoss BPMS web application can run in a clustered environment.    
+This environment consist of:       
+* An Apache Zookeeper / Helix server & controller - Handle the cluster nodes      
+* An external shared database between all BPMS server instances       
+* Several BPMS server instances      
+* An haproxy load balancer       
+
+**Running BPMS in a clustered environment**
+
+You can run an external Zookeeper/Helix, haproxy and database using Docker containers or system services.      
+In order to run the BPMS container using these services for a clustered environment you have to set these environment variables on container startup:     
+* <code>BPMS_CLUSTER_NAME</code> - The Apache helix cluster name to use, not set by default          
+* <code>BPMS_ZOOKEEPER_SERVER</code> - The Apache Zookeeper server URL in a format as <ocde>&lt;server:port&gt;</code>, not set by default          
+* <code>BPMS_CLUSTER_NODE</code> - The number of the current node that will compose the cluster, defaults to <code>1</code>          
+* <code>BPMS_VFS_LOCK</code> -  The Apache helix VFS repository lock name to use, defaults to <code>bpms-vfs-lock</code>           
+* <code>JBOSS_NODE_NAME</code> - The name for the JBoss server node, defaults to <code>node1</code>. Each server must have an unique JBoss node name.        
+
+And the ones for the external database to use:        
+* <code>BPMS_CONNECTION_URL</code> - The database connection URL. If not set, defaults to <code>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</code>          
+* <code>BPMS_CONNECTION_DRIVER</code> - The database connection driver. See [Notes] for available database connection drivers. If not set, defaults to <code>h2</code>        
+* <code>BPMS_CONNECTION_USER</code> - The database connection username. If not set, defaults to <code>sa</code>       
+* <code>BPMS_CONNECTION_PASSWORD</code> - The database connection password. If not set, defaults to <code>sa</code>       
+
+NOTES:        
+* Currently the clustering for BPMS only works in standalone mode for all server instances.       
+* The BPMS container configure the cluster parameters if <code>BPMS_CLUSTER_NAME</code> is set.       
+* Zookeeper server and external database must be configured & ready before running the bpms container.        
+* The external database MUST have the quartz tables created before running the bpms container.      
+* IMPORTANT: Set <code>BPMS_CLUSTER_NODE</code> environment variable using the number of the current cluster instance that will compose the cluster environment. Needed in order to rebalance the clustered resource.
+
+**Running the pre-defined clustered environment for BPMS**
+
+This BPMS docker container image provides a script to run a pre-defined BPMS clustered environment. It:       
+* Creates and configures a XPaaS UberFire cluster controller docker container.      
+* Creates and configures a MySQL 5.1 docker container.      
+* Creates and configures several XPaaS JBoss BPM Suite server instances.      
+
+This script is named <code>start_cluster.sh</code> and has the following input arguments:        
+* <code>-name | --cluster-name</code>: The name for the cluster. If not set, defaults to <code>bpms-cluster</code>.         
+* <code>-vfs | --vfs-lock</code>: The name for VFS resource lock for the cluster. If not set, defaults to <code>bpms-vfs-lock</code>.        
+* <code>-n | --num-instances</code>: The number of BPMS server instances that will compose the cluster. If not set, defaults to <code>2</code>.        
+* <code>-db-root-pwd</code>: The root password for the MySQL database. If not set, defaults to <code>mysql</code>.        
+
+Here is an example of how to run the script:       
+    
+    # With default arguments 
+    sudo ./create_cluster.sh
+        
+    # With arguments 
+    sudo ./create_cluster.sh -name bpms-cluster -vfs bpms-vfs-lock -n 2 -db-root-pwd mysql
+
+After running it, you can see the created containers by typing:       
+
+    docker ps -a
+
 Logging
 -------
 
@@ -197,7 +288,4 @@ In order to run all container services provided by this image, you have to run t
 
 Notes
 -----
-* This container forces to start JBoss EAP using <code>full-ha</code> profile.             
-* Unsupported / pending / TODOS:           
-    - External database not supported yet.          
-    - Clustering not supported yet.            
+* This container forces to start JBoss EAP using <code>full-ha</code> profile.                         

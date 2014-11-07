@@ -16,7 +16,47 @@ fi
 JBOSS_BPMS_DB_ARGUMENTS=" -Djboss.bpms.connection_url=\"$BPMS_CONNECTION_URL\" -Djboss.bpms.driver=\"$BPMS_CONNECTION_DRIVER\" "
 JBOSS_BPMS_DB_ARGUMENTS="$JBOSS_BPMS_DB_ARGUMENTS -Djboss.bpms.username=\"$BPMS_CONNECTION_USER\" -Djboss.bpms.password=\"$BPMS_CONNECTION_PASSWORD\" "
 
+# *************************************************
+# Webapp persistence descriptor dynamic generation.
+# *************************************************
+PERSISTENCE_TEMPLATE_PATH=/opt/jboss/eap/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml.template
+PERSISTENCE_PATH=/opt/jboss/eap/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml
+DEFAULT_DIALECT=org.hibernate.dialect.H2Dialect
+DIALECT=org.hibernate.dialect.H2Dialect
+# Remove, if existing, the current webapp persistence descriptor.
+if [ -f $PERSISTENCE_PATH ]; then
+    rm -f $PERSISTENCE_PATH
+fi
+# Check MySQL database.
+if [[ $BPMS_CONNECTION_DRIVER == *mysql* ]]; 
+then
+    echo "Using MySQL dialect for BPMS webapp"
+    DIALECT=org.hibernate.dialect.MySQLDialect
+fi
+# Generate the webapp persistence descriptor using the dialect specified.
+sed -e "s;$DEFAULT_DIALECT;$DIALECT;" $PERSISTENCE_TEMPLATE_PATH > $PERSISTENCE_PATH
+
+# *********************************************
+# EAP standalone descriptor dynamic generation.
+# *********************************************
+JBOSS_CLUSTER_PROPERTIES_START="<!--"
+JBOSS_CLUSTER_PROPERTIES_END="-->"
+if [[ ! -z "$BPMS_CLUSTER_NAME" ]] ; then
+    JBOSS_CLUSTER_PROPERTIES_START=""
+    JBOSS_CLUSTER_PROPERTIES_END=""
+fi
+STANDALONE_TEMPLATE_PATH=/opt/jboss/eap/standalone/configuration/standalone-full-ha.xml.template
+STANDALONE_PATH=/opt/jboss/eap/standalone/configuration/standalone-full-ha.xml
+# Remove, if existing, the current standalone descriptor.
+if [ -f $STANDALONE_PATH ]; then
+    rm -f $STANDALONE_PATH
+fi
+# Generate the standalone descriptor.
+sed -e "s;%CLUSTER_PROPERTIES_START%;$JBOSS_CLUSTER_PROPERTIES_START;" -e "s;%CLUSTER_PROPERTIES_END%;$JBOSS_CLUSTER_PROPERTIES_END;" $STANDALONE_TEMPLATE_PATH > $STANDALONE_PATH
+
+# ***************************
 # BPMS cluster configuration
+# ***************************
 if [[ ! -z "$BPMS_CLUSTER_NAME" ]] ; then
     
     if [[ -z "$BPMS_GIT_HOST" ]] ; then
@@ -33,19 +73,21 @@ if [[ ! -z "$BPMS_CLUSTER_NAME" ]] ; then
     JBOSS_BPMS_CLUSTER_ARGUMENTS=" $JBOSS_BPMS_CLUSTER_ARGUMENTS -Djboss.bpms.index.dir=$BPMS_INDEX_DIR -Djboss.bpms.cluster.id=$BPMS_CLUSTER_NAME -Djboss.bpms.cluster.zk=$BPMS_ZOOKEEPER_SERVER -Djboss.bpms.cluster.node=$JBOSS_NODE_NAME"
     JBOSS_BPMS_CLUSTER_ARGUMENTS=" $JBOSS_BPMS_CLUSTER_ARGUMENTS -Djboss.bpms.vfs.lock=$BPMS_VFS_LOCK -Djboss.bpms.quartz.properties=$BPMS_QUARTZ_PROPERTIES -Djboss.messaging.cluster.password=$BPMS_CLUSTER_PASSWORD "
 
-    # TODO: HELIX CLIENT RELATED
-    # echo "Configuring HELIX client for BPMS server instance '$JBOSS_NODE_NAME' into cluster '$BPMS_CLUSTER_NAME'"
+    echo "Configuring HELIX client for BPMS server instance '$JBOSS_NODE_NAME' into cluster '$BPMS_CLUSTER_NAME'"
     
     # Register the node.
-    # echo "Registering cluster node #$BPMS_CLUSTER_NODE named '$JBOSS_NODE_NAME' into '$BPMS_CLUSTER_NAME'"
-    # $HELIX_HOME/bin/helix-admin.sh --zkSvr $BPMS_ZOOKEEPER_SERVER --addNode $BPMS_CLUSTER_NAME $JBOSS_NODE_NAME
+    echo "Registering cluster node #$BPMS_CLUSTER_NODE named '$JBOSS_NODE_NAME' into '$BPMS_CLUSTER_NAME'"
+    $HELIX_HOME/bin/helix-admin.sh --zkSvr $BPMS_ZOOKEEPER_SERVER --addNode $BPMS_CLUSTER_NAME $JBOSS_NODE_NAME
     
     # Rebalance the cluster resource.
-    # echo "Rebalacing clustered resource '$BPMS_VFS_LOCK' in cluster '$BPMS_CLUSTER_NAME' using $BPMS_CLUSTER_NODE replicas"
-    # $HELIX_HOME/bin/helix-admin.sh --zkSvr $BPMS_ZOOKEEPER_SERVER --rebalance $BPMS_CLUSTER_NAME $BPMS_VFS_LOCK $BPMS_CLUSTER_NODE
+    echo "Rebalacing clustered resource '$BPMS_VFS_LOCK' in cluster '$BPMS_CLUSTER_NAME' using $BPMS_CLUSTER_NODE replicas"
+    $HELIX_HOME/bin/helix-admin.sh --zkSvr $BPMS_ZOOKEEPER_SERVER --rebalance $BPMS_CLUSTER_NAME $BPMS_VFS_LOCK $BPMS_CLUSTER_NODE
     
 fi
 
+# *******************
+# RUNNING BPMS Server
+# *******************
 # Boot EAP with BPMS in standalone mode by default
 # When using CMD environment variables are not expanded,
 # so we need to specify the $JBOSS_HOME path

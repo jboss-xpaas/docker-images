@@ -37,10 +37,21 @@ ENV BPMS_QUARTZ_PROPERTIES /opt/jboss/bpms/quartz-db.properties
 # TODO: Docker best practices - Do not use passwords here
 ENV BPMS_CLUSTER_PASSWORD bpmsclustering
 ENV BPMS_CLUSTER_NODE 1
+ENV HELIX_VERSION 0.6.3
+ENV HELIX_HOME /opt/jboss/helix
 
 ####### CUSTOM JBOSS USER ############
 # Switchback to jboss user
 USER jboss
+
+####### HELIX ############
+RUN curl --silent --output /opt/jboss/helix.tar http://ftp.cixug.es/apache/helix/$HELIX_VERSION/binaries/helix-core-$HELIX_VERSION-pkg.tar; \ 
+tar -xvf helix.tar; \ 
+mv helix-core-$HELIX_VERSION helix; \ 
+rm helix.tar
+
+####### EAP MYSQL MODULE ############
+ADD bin/mysql_module.tar.gz /opt/jboss/eap/modules/system/layers/base
 
 ####### BPMS CUSTOM CONFIGURATION ############
 # Create the BPMS directories inside /opt/jboss
@@ -51,14 +62,18 @@ RUN mkdir -p /opt/jboss/bpms/index /opt/jboss/bpms/vfs
 # See https://github.com/docker/docker/issues/5110
 # The workaround is doing a chown using root user and then switchback to jboss user.
 ADD etc/start-bpms.sh /opt/jboss/bpms/start-bpms.sh
-ADD etc/standalone-full-ha.xml /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml
+ADD etc/standalone-full-ha.xml.template /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml.template
 ADD etc/bpms-users.properties /opt/jboss/eap/standalone/configuration/bpms-users.properties
 ADD etc/bpms-roles.properties /opt/jboss/eap/standalone/configuration/bpms-roles.properties
+ADD etc/persistence.xml.template /opt/jboss/eap/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml.template
+ADD etc/quartz-db.properties /opt/jboss/bpms/quartz-db.properties
 USER root
 RUN chown jboss:jboss /opt/jboss/bpms/start-bpms.sh; \ 
-chown jboss:jboss /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml; \ 
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/standalone-full-ha.xml.template; \ 
 chown jboss:jboss /opt/jboss/eap/standalone/configuration/bpms-users.properties; \ 
-chown jboss:jboss /opt/jboss/eap/standalone/configuration/bpms-roles.properties
+chown jboss:jboss /opt/jboss/eap/standalone/configuration/bpms-roles.properties; \ 
+chown jboss:jboss /opt/jboss/eap/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml.template; \ 
+chown jboss:jboss /opt/jboss/bpms/quartz-db.properties
 
 # Add the executable flag.
 RUN chmod +x /opt/jboss/bpms/start-bpms.sh

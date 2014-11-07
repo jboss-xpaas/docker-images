@@ -53,14 +53,14 @@
     <property name="org.uberfire.nio.git.ssh.enabled" value="true"/>
     <property name="org.uberfire.nio.git.daemon.upload" value="true"/>
     <!-- <property name="org.uberfire.nio.git.ssh.cert.dir" value=""/> -->
-    <!-- TODO: CLUSTERING RELATED.
+    %CLUSTER_PROPERTIES_START%
     <property name="org.uberfire.cluster.id" value="${jboss.bpms.cluster.id}"/>
     <property name="org.uberfire.cluster.zk" value="${jboss.bpms.cluster.zk}"/>
     <property name="org.uberfire.cluster.local.id" value="${jboss.bpms.cluster.node}"/>
     <property name="org.uberfire.cluster.vfs.lock" value="${jboss.bpms.vfs.lock}"/>
     <property name="org.uberfire.cluster.autostart" value="false"/>
     <property name="org.quartz.properties" value="${jboss.bpms.quartz.properties}"/>
-    -->
+    %CLUSTER_PROPERTIES_END%
   </system-properties>
   <management>
     <security-realms>
@@ -165,7 +165,7 @@
             <password>${jboss.bpms.password:sa}</password>
           </security>
         </datasource>
-        <!-- TODO: CLUSTERING RELATED.
+        %CLUSTER_PROPERTIES_START%  
         <datasource jndi-name="java:/jboss/datasources/quartzNotManagedDS" pool-name="quartzNotManagedDS" enabled="true" use-java-context="true">
           <connection-url>${jboss.bpms.connection_url:jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}</connection-url>
           <driver>${jboss.bpms.driver:h2}</driver>
@@ -174,10 +174,14 @@
             <password>${jboss.bpms.password:sa}</password>
           </security>
         </datasource>
-        -->
+        %CLUSTER_PROPERTIES_END%
         <drivers>
           <driver name="h2" module="com.h2database.h2">
             <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+          </driver>
+          <!-- XPAAS BPMSUITE - ADDED MYSQL DRIVER -->
+          <driver name="mysql" module="com.mysql">
+            <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
           </driver>
         </drivers>
       </datasources>
