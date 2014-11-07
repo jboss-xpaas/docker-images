@@ -234,7 +234,7 @@ This BPMS docker container image provides a script to run a pre-defined BPMS clu
 * Creates and configures a MySQL 5.1 docker container.      
 * Creates and configures several XPaaS JBoss BPM Suite server instances.      
 
-This script is named <code>start_cluster.sh</code> and has the following input arguments:        
+This script is named [start_cluster.sh](./start_cluster.sh) and has the following input arguments:        
 * <code>-name | --cluster-name</code>: The name for the cluster. If not set, defaults to <code>bpms-cluster</code>.         
 * <code>-vfs | --vfs-lock</code>: The name for VFS resource lock for the cluster. If not set, defaults to <code>bpms-vfs-lock</code>.        
 * <code>-n | --num-instances</code>: The number of BPMS server instances that will compose the cluster. If not set, defaults to <code>2</code>.        
