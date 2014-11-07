@@ -64,6 +64,7 @@ You can set additional environment variables when running the container for conf
 
 - <code>ZOOKEEPER_CLIENT_PORT</code> - The client port for the Zookeeper server. If not set, defaults to <code>2181</code>          
 - <code>CLUSTER_NAME</code> - The name of the cluster registered. If not set, defaults to <code>zk-cluster</code>          
+- <code>VFS_REPO</code> - The name of Helix resource to add in cluster with name <code>CLUSTER_NAME</code>. If not set, defaults to <code>vfs-repo</code>          
 
 Accessing the container
 -----------------------
