@@ -243,14 +243,17 @@ This script is named <code>start_cluster.sh</code> and has the following input a
 Here is an example of how to run the script:       
     
     # With default arguments 
-    sudo ./create_cluster.sh
+    sudo ./start_cluster.sh
         
     # With arguments 
-    sudo ./create_cluster.sh -name bpms-cluster -vfs bpms-vfs-lock -n 2 -db-root-pwd mysql
+    sudo ./start_cluster.sh -name bpms-cluster -vfs bpms-vfs-lock -n 2 -db-root-pwd mysql
 
 After running it, you can see the created containers by typing:       
 
     docker ps -a
+
+**Notes**
+* Pending JBoss EAP jgroups clustering support.         
 
 Logging
 -------

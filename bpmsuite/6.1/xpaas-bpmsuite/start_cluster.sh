@@ -4,11 +4,18 @@
 # Script information
 # ------------------
 # This script is used to run several BPMS instances in a clustered environment.
+#
 # The BPMS cluster environment consists of:
 # - Several JBoss EAP instances with BPMS web application deployed (business-central)
 # - A MySQL database to share across all server instances
 # - A Zookeeper server up & running
 # - A Helix cluster and resource created in the Zookeeper server
+#
+# This script requires these Docker images:
+# - redhat/xpaas-uberfire-custer-controller:6.1
+# - redhat/xpaas-bpmsuite:6.1
+# - mysql:5.6
+#
 # Notes
 # -----
 # - The cluster is created using JBoss servers in standalone mode.
@@ -43,7 +50,7 @@ MYSQL_CONTAINER_PORT=3306
 MYSQL_DB_NAME="bpmsclustering"
 MYSQL_ROOT_PWD="mysql"
 MYSQ_DB_URL=
-QUARTZ_MYSQL_SCRIPT=etc/quartz/quartz_tables_mysql.sql
+QUARTZ_MYSQL_SCRIPT=etc/quartz/tables_mysql.sql
 BPMS_IMAGE_NAME="redhat/xpaas-bpmsuite"
 BPMS_IMAGE_VERSION="6.1"
 BPMS_CONTAINER_IP=
@@ -87,12 +94,12 @@ function run_haproxy() {
 }
 
 # *************************************************************************************************************
-# Zookeeper / Helix
+# UberFire cluster controller
 # *************************************************************************************************************
-function run_zk_helix() {
+function run_uf() {
 
     echo "*************************************************************************************************************"
-    echo "Zookeeper / Helix"
+    echo "UberFire cluster controller"
     echo "*************************************************************************************************************"
     
     # Create the BPMS container.
@@ -322,9 +329,9 @@ done
 init
 
 # *************************************************************************************************************
-# Zookeeper / Helix
+# UberFire cluster controller
 # *************************************************************************************************************
-run_zk_helix
+run_uf
 
 # *************************************************************************************************************
 # Database
