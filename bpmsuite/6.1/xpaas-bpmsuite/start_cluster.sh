@@ -103,15 +103,15 @@ function run_uf() {
     echo "*************************************************************************************************************"
     
     # Create the BPMS container.
-    CONTAINER_NAME="bpms-zookeeper"
+    CONTAINER_NAME="bpms-uf_cluster_controller"
     ROOT_PASSWORD="xpaas"
-    image_xpaas_zookeeper=$(docker run -P -d --name $CONTAINER_NAME -e CLUSTER_NAME="$CLUSTER_NAME" -e VFS_REPO="$VFS_LOCK" $ZK_IMAGE_NAME:$ZK_IMAGE_VERSION)
-    ZK_HOST=$(docker inspect $image_xpaas_zookeeper | grep IPAddress | awk '{print $2}' | tr -d '",')
+    image_xpaas_uf_cluster_controller=$(docker run -P -d --name $CONTAINER_NAME -e CLUSTER_NAME="$CLUSTER_NAME" -e VFS_REPO="$VFS_LOCK" $ZK_IMAGE_NAME:$ZK_IMAGE_VERSION)
+    ZK_HOST=$(docker inspect $image_xpaas_uf_cluster_controller | grep IPAddress | awk '{print $2}' | tr -d '",')
     if [ "$ZK_HOST" == "" ]; then
-        echo "Zookeeper container seems not to be started successfully. Please review the container logs. Exiting!"
+        echo "UberFire cluster controller container seems not to be started successfully. Please review the container logs. Exiting!"
         exit 1
     fi
-    echo "Zookeeper - Container started at $ZK_HOST:2181"
+    echo "UberFire cluster controller - Container started at $ZK_HOST:2181"
     
     echo ""
     echo ""
