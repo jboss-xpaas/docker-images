@@ -18,12 +18,12 @@ Table of contents
 * **[Logging](#logging)**
 * **[Stopping the container](#stopping-the-container)**
 * **[Experimenting](#experimenting)**
-* **[Notes](#notes)**
 
 Control scripts
 ---------------
 
-There are three control scripts for running BPMS with no clustering support:    
+There are three control scripts for running this image:        
+    
 * <code>build.sh</code> Builds the XPaaS JBoss Uberfire cluster controller docker image    
 * <code>start.sh</code> Starts a new XPaaS JBoss Uberfire cluster controller docker container based on this image    
 * <code>stop.sh</code>  Stops the runned XPaaS JBoss Uberfire cluster controller docker container    
@@ -47,7 +47,23 @@ Build the container:
 Running the container
 ---------------------
 
-# TODO
+To run a new container:
+    
+    ./start.sh [-c <container_name>]
+    Example: ./start.sh -c xpaas_uf_cluster_controller
+
+Or you can try it out via docker command directly:
+
+    docker run -P -d [--name <container_name>] redhat/xpaas-uberfire-custer-controller:6.1
+
+These commands will start Zookeeper server.      
+
+**Environment variables**         
+
+You can set additional environment variables when running the container for configuring the Zookeeper server:       
+
+- <code>ZOOKEEPER_CLIENT_PORT</code> - The client port for the Zookeeper server. If not set, defaults to <code>2181</code>          
+- <code>CLUSTER_NAME</code> - The name of the cluster registered. If not set, defaults to <code>zk-cluster</code>          
 
 Accessing the container
 -----------------------
@@ -73,7 +89,9 @@ You can attach the container by running:
 
     docker attach <container_id>
 
-# TODO: ZK/Helix logs      
+You can find the Helix controller logs for the registered cluster inside the container at path:
+    
+    /tmp/controller.log
 
 Stopping the container
 ----------------------
@@ -92,8 +110,4 @@ You can then noodle around the container and run stuff & look at files etc.
 
 In order to run all container services provided by this image, you have to run the following command:
 
-    /jboss/scripts/zookeeper/startup.sh
-
-Notes
------
-* By default, the container start a zookeeper server with a cluster named $CLUSTER_NAME and an helix controller for this cluster
+    /opt/jboss/scripts/zookeeper/startup.sh

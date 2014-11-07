@@ -1,5 +1,16 @@
 #!/bin/sh
 
-# JBoss UF cluster controller docker image stop script
+# **********************************************
+# UF cluster controller docker image stop script
+# **********************************************
+
+# Check if container is already started
+if [ -f docker.pid ]; then
+    echo "Container is already started"
+    container_id=$(cat docker.pid)
+    echo "Stoping container $container_id..."
+    docker stop $container_id
+    rm -f docker.pid
+fi
 
 exit 0

@@ -1,14 +1,13 @@
 #!/bin/sh
 
 ZK_CONFIG_FILE=$ZOOKEEPER_HOME/conf/zoo.cfg
-HELIX_LOGS_FILE=tmp/controller.log
+HELIX_LOGS_FILE=/tmp/controller.log
 
 # Welcome message
 echo "Welcome to XPaaS Uberfire cluster controller"  
 echo 
-echo "Starting Zookeeper container with name $ZOOKEEPER_NAME"
 echo "ZK - Using data directory: $ZOOKEEPER_DATA_DIR"
-echo "ZK - Using client port: $ENV ZOOKEEPER_CLIENT_PORT"
+echo "ZK - Using client port: $ZOOKEEPER_CLIENT_PORT"
 echo "ZK - Using registering servers: $ZOOKEEPER_REGISTERED_SERVERS"
 echo "ZK - Using as cluster name: $CLUSTER_NAME"
 
@@ -57,10 +56,9 @@ echo "ZK - Server started"
 echo "Helix - Adding cluster '$CLUSTER_NAME' into server 'localhost:2181'"
 $HELIX_HOME/bin/helix-admin.sh --zkSvr localhost:2181 --addCluster $CLUSTER_NAME
 
-echo "Helix - Starting helix controller..."
-$HELIX_HOME/bin/run-helix-controller.sh --zkSvr localhost:2181 --cluster $CLUSTER_NAME 2>&1 > $HELIX_LOGS_FILE &
-echo "Helix - Helix controller started. You can find the logs at 'HELIX_LOGS_FILE'"
+echo "Helix - Starting helix controller. You can find the logs at '$HELIX_LOGS_FILE'"
+$HELIX_HOME/bin/run-helix-controller.sh --zkSvr localhost:2181 --cluster $CLUSTER_NAME 2>&1 >> $HELIX_LOGS_FILE
 
-echo "XPaaS Uberfire cluster controller started"  
+echo "XPaaS Uberfire cluster controller finished"  
 
 exit 0
