@@ -54,7 +54,7 @@ To run a new container:
 
 Or you can try it out via docker command directly:
 
-    docker run -P -d [--name <container_name>] redhat/xpaas-uberfire-custer-controller:6.1
+    docker run -P -d [--name <container_name>] redhat/xpaas-uberfire-cluster-controller:6.1
 
 These commands will start Zookeeper server.      
 
@@ -105,7 +105,7 @@ Experimenting
 -------------
 To spin up a shell in one of the containers try:
 
-    docker run -P -i -t redhat/xpaas-uberfire-custer-controller /bin/bash
+    docker run -P -i -t redhat/xpaas-uberfire-cluster-controller /bin/bash
 
 You can then noodle around the container and run stuff & look at files etc.
 

@@ -7,12 +7,12 @@
 # Program arguments
 #
 # -c | --container-name:    The name for the created container.
-#                           If not specified, defaults to "xpaas-uberfire-custer-controller"
+#                           If not specified, defaults to "xpaas-uberfire-cluster-controller"
 # -h | --help;              Show the script usage
 #
 
-CONTAINER_NAME="xpaas-uberfire-custer-controller"
-IMAGE_NAME="redhat/xpaas-uberfire-custer-controller"
+CONTAINER_NAME="xpaas-uberfire-cluster-controller"
+IMAGE_NAME="redhat/xpaas-uberfire-cluster-controller"
 IMAGE_TAG="6.1"
 
 function usage

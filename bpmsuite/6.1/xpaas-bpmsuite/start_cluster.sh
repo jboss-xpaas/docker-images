@@ -12,7 +12,7 @@
 # - A Helix cluster and resource created in the Zookeeper server
 #
 # This script requires these Docker images:
-# - redhat/xpaas-uberfire-custer-controller:6.1
+# - redhat/xpaas-uberfire-cluster-controller:6.1
 # - redhat/xpaas-bpmsuite:6.1
 # - mysql:5.6
 #
@@ -41,7 +41,7 @@ VFS_LOCK="bpms-vfs-lock"
 CLUSTER_INSTANCES=2
 ZK_HOST=
 ZK_PORT=2181
-ZK_IMAGE_NAME="redhat/xpaas-uberfire-custer-controller"
+ZK_IMAGE_NAME="redhat/xpaas-uberfire-cluster-controller"
 ZK_IMAGE_VERSION="6.1"
 MYSQ_IMAGE_NAME="mysql"
 MYSQ_IMAGE_VERSION="5.6"

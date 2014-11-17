@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="redhat/xpaas-uberfire-custer-controller"
+IMAGE_NAME="redhat/xpaas-uberfire-cluster-controller"
 IMAGE_TAG="6.1"
 
 # Build the container image.
