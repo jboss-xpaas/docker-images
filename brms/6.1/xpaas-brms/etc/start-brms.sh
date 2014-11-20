@@ -7,7 +7,7 @@ JBOSS_BRMS_DB_ARGUMENTS=
 JBOSS_BRMS_CLUSTER_ARGUMENTS=
 
 # JBoss EAP configuration.
-if [[ -z "$JJBOSS_BIND_ADDRESS" ]] ; then
+if [[ -z "$JBOSS_BIND_ADDRESS" ]] ; then
     echo "Not custom JBoss Application Server bind address set. Using the current container's IP address '$DOCKER_IP'."
     export JBOSS_BIND_ADDRESS=$DOCKER_IP
 fi
